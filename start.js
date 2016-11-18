@@ -155,8 +155,14 @@ async.series( {
 //            var values = res.split(",");
             var data = { temperature: res[0], humidity: res[1] }
             log.verbose(GROVEPI, 'DHT onChange value = ' + JSON.stringify(data));
+            var vd = grovepi.getIotVd(DHTSENSOR);
+            if (vd) {
+              vd.update({ distance: res});
+            } else {
+              log.error(IOTCS, "URN not registered: " + DHTSENSOR);
+            }
           })
-          dhtSensor.watch(1000) // milliseconds
+          dhtSensor.watch(500) // milliseconds
 /**
           // Ultrasonic Ranger
           log.verbose(GROVEPI, 'Ultrasonic Ranger Digital Sensor (start watch)');
