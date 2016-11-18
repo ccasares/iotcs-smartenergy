@@ -153,6 +153,7 @@ async.series( {
           log.verbose(GROVEPI, 'DHT Digital Sensor (start watch)');
           dhtSensor.on('change', function(res) {
 //            var values = res.split(",");
+            console.log(res);
             var data = { temperature: res[0], humidity: res[1] }
             log.verbose(GROVEPI, 'DHT onChange value = ' + JSON.stringify(data));
             var vd = grovepi.getIotVd(DHTSENSOR);
