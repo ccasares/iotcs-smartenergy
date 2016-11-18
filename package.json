@@ -19,6 +19,9 @@
   "dependencies": {
     "bleno": "^0.4.1",
     "debug": "^2.3.2",
-    "noble": "^1.7.0"
+    "lodash": "^4.17.2",
+    "noble": "^1.7.0",
+    "node-grovepi": "^2.0.9",
+    "npmlog-ts": "0.0.1"
   }
 }
