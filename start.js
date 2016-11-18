@@ -142,7 +142,7 @@ async.series( {
       },
       onInit: function(res) {
         if (res) {
-          var dhtSensor = new GrovePi.sensors.DHTDigital(3, GrovePi.sensors.DHTDigital.VERSION.DHT22, GrovePi.sensors.DHTDigital.CELSIUS)
+          var dhtSensor = new GrovePi.sensors.DHTDigital(3, GrovePi.sensors.DHTDigital.VERSION.DHT11, GrovePi.sensors.DHTDigital.CELSIUS)
 /**
           var ultrasonicSensor = new GrovePi.sensors.UltrasonicDigital(4);
           var lightSensor = new GrovePi.sensors.LightAnalog(2);
