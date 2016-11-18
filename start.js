@@ -36,9 +36,9 @@ var devices = [ grovepi, beacon ];
 
 // Init Devices
 grovepi.setStoreFile(storeFileGrovepi, storePassword);
-grovepi.setUrn(urn);
+grovepi.setUrn(urnGrovepi);
 beacon.setStoreFile(storeFileBeacon, storePassword);
-beacon.setUrn(urn);
+beacon.setUrn(urnBeacon);
 
 // GrovePi stuff
 var board = undefined;
