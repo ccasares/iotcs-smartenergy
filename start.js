@@ -11,6 +11,7 @@ var GrovePi = require('node-grovepi').GrovePi
 
 // IoTCS stuff
 const GROVEPIDEV = "GrovePi+";
+const BEACONDEV  = "Beacon";
 dcl = dcl({debug: false});
 var storePassword = 'Welcome1';
 const DHTSENSOR       = "urn:com:oracle:ccasares:iot:device:grovepi:sensors:dht";
@@ -18,20 +19,26 @@ const LIGHTSENSOR     = "urn:com:oracle:ccasares:iot:device:grovepi:sensors:ligh
 const MOTIONSENSOR    = "urn:com:oracle:ccasares:iot:device:grovepi:sensors:motion";
 const PROXIMITYSENSOR = "urn:com:oracle:ccasares:iot:device:grovepi:sensors:proximity";
 const SOUNDSENSOR     = "urn:com:oracle:ccasares:iot:device:grovepi:sensors:sound";
-var urn = [
+const BEACONURN       = "urn:com:oracle:iot:device:estimote:beacon";
+var urnGrovepi = [
      DHTSENSOR
    , LIGHTSENSOR
    , MOTIONSENSOR
    , PROXIMITYSENSOR
    , SOUNDSENSOR
 ];
+var urnBeacon = [ BEACONURN ];
 var grovepi = new Device(GROVEPIDEV);
-const storeFile = process.argv[2];
-var devices = [ grovepi ];
+var beacon  = new Device(BEACONDEV);
+const storeFileGrovepi = process.argv[2];
+const storeFileBeacon  = process.argv[3];
+var devices = [ grovepi, beacon ];
 
 // Init Devices
-grovepi.setStoreFile(storeFile, storePassword);
+grovepi.setStoreFile(storeFileGrovepi, storePassword);
 grovepi.setUrn(urn);
+beacon.setStoreFile(storeFileBeacon, storePassword);
+beacon.setUrn(urn);
 
 // GrovePi stuff
 var board = undefined;
