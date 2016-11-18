@@ -152,7 +152,9 @@ async.series( {
           // DHT Sensor
           log.verbose(GROVEPI, 'DHT Digital Sensor (start watch)');
           dhtSensor.on('change', function(res) {
-            log.verbose(GROVEPI, 'DHT onChange value=' + res)
+            var values = res.split(",");
+            var data = { temperature: Number(values[0]), humidity: Number(values[1]) }
+            log.verbose(GROVEPI, 'DHT onChange value = ' + JSON.stringify(data));
           })
           dhtSensor.watch(1000) // milliseconds
 /**
