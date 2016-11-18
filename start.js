@@ -6,6 +6,7 @@ var GrovePi = require('node-grovepi').GrovePi
   , dcl = require('./device-library.node')
   , Device = require('./device')
   , log = require('npmlog-ts')
+  , bleacon = require('./lib/bleacon')
 ;
 
 // IoTCS stuff
@@ -35,10 +36,14 @@ grovepi.setUrn(urn);
 // GrovePi stuff
 var board = undefined;
 
+// Beacons stuff
+var Bleacon = new bleacon();
+
 // Misc
 const PROCESS = 'PROCESS';
 const IOTCS   = 'IOTCS';
 const GROVEPI = 'GROVEPI';
+const BEACON  = 'BEACON';
 log.level ='verbose';
 log.timestamp = true;
 
@@ -133,7 +138,7 @@ async.series( {
     log.info(GROVEPI, "Initializing GrovePi devices");
     if (board)
       callbackMainSeries(null, true);
-    log.verbose(GROVEPI, 'Starting Board setup');
+    log.info(GROVEPI, 'Starting Board setup');
     board = new GrovePi.board({
       debug: true,
       onError: function(err) {
@@ -143,14 +148,9 @@ async.series( {
       onInit: function(res) {
         if (res) {
           var dhtSensor = new GrovePi.sensors.DHTDigital(3, GrovePi.sensors.DHTDigital.VERSION.DHT11, GrovePi.sensors.DHTDigital.CELSIUS)
-/**
-          var ultrasonicSensor = new GrovePi.sensors.UltrasonicDigital(4);
-          var lightSensor = new GrovePi.sensors.LightAnalog(2);
-          var motionSensor = new GrovePi.sensors.DigitalInput(8);
-**/
-          log.verbose(GROVEPI, 'GrovePi Version :: ' + board.version());
+          log.info(GROVEPI, 'GrovePi Version :: ' + board.version());
           // DHT Sensor
-          log.verbose(GROVEPI, 'DHT Digital Sensor (start watch)');
+          log.info(GROVEPI, 'DHT Digital Sensor (start watch)');
           dhtSensor.on('change', function(res) {
             if ( res.length == 3) {
               var data = { temperature: res[0], humidity: res[1] }
@@ -166,50 +166,6 @@ async.series( {
             }
           })
           dhtSensor.watch(500) // milliseconds
-/**
-          // Ultrasonic Ranger
-          log.verbose(GROVEPI, 'Ultrasonic Ranger Digital Sensor (start watch)');
-          ultrasonicSensor.on('change', function(res) {
-            if (typeof res === 'number') {
-              log.verbose(GROVEPI,"Distance: " + res);
-              var vd = grovepi.getIotVd(PROXIMITYSENSOR);
-              if (vd) {
-                vd.update({ distance: res});
-              } else {
-                log.error(IOTCS, "URN not registered: " + PROXIMITYSENSOR);
-              }
-            } else {
-              log.warn(GROVEPI, "Proximity Sensor: Invalid value read: " + res);
-            }
-          })
-          ultrasonicSensor.watch();
-          // Light Sensor
-          log.verbose(GROVEPI, 'Light Analog Sensor (start watch)')
-          lightSensor.on('change', function(res) {
-            if (typeof res === 'number') {
-              var vd = grovepi.getIotVd(LIGHTSENSOR);
-              if (vd) {
-                vd.update({ intensity: res});
-              } else {
-                log.error(IOTCS, "URN not registered: " + LIGHTSENSOR);
-              }
-            } else {
-              log.warn(GROVEPI, "Light Sensor: Invalid value read: " + res);
-            }
-          })
-          lightSensor.watch();
-          // Motion Sensor
-          log.verbose(GROVEPI, 'Motion Digital Sensor (start watch)');
-          motionSensor.on('change', function(res) {
-            var vd = grovepi.getIotVd(MOTIONSENSOR);
-            if (vd) {
-              vd.update({ motion_detected: (res === '1')});
-            } else {
-              log.error(IOTCS, "URN not registered: " + MOTIONSENSOR);
-            }
-          });
-          motionSensor.watch();
-**/
           log.info(GROVEPI, "GrovePi devices initialized successfully");
         } else {
           log.error(GROVEPI, 'TEST CANNOT START')
@@ -217,6 +173,15 @@ async.series( {
       }
     })
     board.init()
+    callbackMainSeries(null, true);
+  },
+  beacons: function(callbackMainSeries) {
+    log.info(BEACON, "Initializing Beacons");
+    Bleacon.on('discover', function(b) {
+      log.verbose(BEACON, 'Beacon found: ' + JSON.stringify(b));
+    });
+    log.verbose(BEACON, "Start scanning...");
+    Bleacon.startScanning();
     callbackMainSeries(null, true);
   }
 }, function(err, results) {
