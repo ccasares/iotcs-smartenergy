@@ -1,0 +1,24 @@
+{
+  "name": "iotcs-smartenergy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ccasares/iotcs-smartenergy.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ccasares/iotcs-smartenergy/issues"
+  },
+  "homepage": "https://github.com/ccasares/iotcs-smartenergy#readme",
+  "dependencies": {
+    "bleno": "^0.4.1",
+    "debug": "^2.3.2",
+    "noble": "^1.7.0"
+  }
+}
