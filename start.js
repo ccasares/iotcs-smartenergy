@@ -10,7 +10,7 @@ var GrovePi = require('node-grovepi').GrovePi
 
 // IoTCS stuff
 const GROVEPIDEV = "GrovePi+";
-dcl = dcl({debug: false});
+dcl = dcl({debug: true});
 var storePassword = 'Welcome1';
 const DHTSENSOR       = "urn:com:oracle:ccasares:iot:device:grovepi:sensors:dht";
 const LIGHTSENSOR     = "urn:com:oracle:ccasares:iot:device:grovepi:sensors:light";
@@ -157,7 +157,7 @@ async.series( {
             log.verbose(GROVEPI, 'DHT onChange value = ' + JSON.stringify(data));
             var vd = grovepi.getIotVd(DHTSENSOR);
             if (vd) {
-              vd.update({ distance: res});
+              vd.update(data);
             } else {
               log.error(IOTCS, "URN not registered: " + DHTSENSOR);
             }
