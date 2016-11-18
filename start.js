@@ -152,15 +152,17 @@ async.series( {
           // DHT Sensor
           log.verbose(GROVEPI, 'DHT Digital Sensor (start watch)');
           dhtSensor.on('change', function(res) {
-//            var values = res.split(",");
-            console.log(res);
-            var data = { temperature: res[0], humidity: res[1] }
-            log.verbose(GROVEPI, 'DHT onChange value = ' + JSON.stringify(data));
-            var vd = grovepi.getIotVd(DHTSENSOR);
-            if (vd) {
-              vd.update(data);
+            if ( res.length == 3) {
+              var data = { temperature: res[0], humidity: res[1] }
+              log.verbose(GROVEPI, 'DHT onChange value = ' + JSON.stringify(data));
+              var vd = grovepi.getIotVd(DHTSENSOR);
+              if (vd) {
+                vd.update(data);
+              } else {
+                log.error(IOTCS, "URN not registered: " + DHTSENSOR);
+              }
             } else {
-              log.error(IOTCS, "URN not registered: " + DHTSENSOR);
+              log.warn(GROVEPI, "DHT Digital Sensor: Invalid value read: " + res);
             }
           })
           dhtSensor.watch(500) // milliseconds
