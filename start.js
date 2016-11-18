@@ -10,7 +10,7 @@ var GrovePi = require('node-grovepi').GrovePi
 
 // IoTCS stuff
 const GROVEPIDEV = "GrovePi+";
-dcl = dcl({debug: true});
+dcl = dcl({debug: false});
 var storePassword = 'Welcome1';
 const DHTSENSOR       = "urn:com:oracle:ccasares:iot:device:grovepi:sensors:dht";
 const LIGHTSENSOR     = "urn:com:oracle:ccasares:iot:device:grovepi:sensors:light";
