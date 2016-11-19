@@ -186,7 +186,7 @@ async.series( {
     log.info(BEACON, "Initializing Beacons");
     Bleacon.on('discover', function(b) {
       log.verbose(BEACON, 'Beacon found: ' + JSON.stringify(b));
-      var vd = grovepi.getIotVd(BEACONURN);
+      var vd = beacon.getIotVd(BEACONURN);
       if (vd) {
         vd.update(b);
       } else {
