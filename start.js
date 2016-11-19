@@ -186,6 +186,12 @@ async.series( {
     log.info(BEACON, "Initializing Beacons");
     Bleacon.on('discover', function(b) {
       log.verbose(BEACON, 'Beacon found: ' + JSON.stringify(b));
+      var vd = grovepi.getIotVd(BEACONURN);
+      if (vd) {
+        vd.update(b);
+      } else {
+        log.error(IOTCS, "URN not registered: " + BEACONURN);
+      }
     });
     log.verbose(BEACON, "Start scanning...");
     Bleacon.startScanning();
