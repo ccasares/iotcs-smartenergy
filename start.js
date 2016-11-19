@@ -41,7 +41,9 @@ beacon.setStoreFile(storeFileBeacon, storePassword);
 beacon.setUrn(urnBeacon);
 
 // GrovePi stuff
-var board = undefined;
+var board    = undefined;
+var lastData = undefined;
+var timer    = undefined;
 
 // Beacons stuff
 var Bleacon = new bleacon();
@@ -160,19 +162,25 @@ async.series( {
           log.info(GROVEPI, 'DHT Digital Sensor (start watch)');
           dhtSensor.on('change', function(res) {
             if ( res.length == 3) {
-              var data = { temperature: res[0], humidity: res[1] }
-              log.verbose(GROVEPI, 'DHT onChange value = ' + JSON.stringify(data));
-              var vd = grovepi.getIotVd(DHTSENSOR);
-              if (vd) {
-                vd.update(data);
-              } else {
-                log.error(IOTCS, "URN not registered: " + DHTSENSOR);
-              }
+              lastData = { temperature: res[0], humidity: res[1] };
             } else {
               log.warn(GROVEPI, "DHT Digital Sensor: Invalid value read: " + res);
             }
           })
           dhtSensor.watch(500) // milliseconds
+          timer = setInterval(() => {
+            if ( !lastData) {
+              return;
+            }
+            var data = { temperature: lastData.temperature, humidity: lastData.humidity };
+            log.verbose(GROVEPI, 'DHT onChange value = ' + JSON.stringify(data));
+            var vd = grovepi.getIotVd(DHTSENSOR);
+            if (vd) {
+              vd.update(data);
+            } else {
+              log.error(IOTCS, "URN not registered: " + DHTSENSOR);
+            }
+          }, 1000);
           log.info(GROVEPI, "GrovePi devices initialized successfully");
         } else {
           log.error(GROVEPI, 'TEST CANNOT START')
